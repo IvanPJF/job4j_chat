@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.job4j.chat.RunApplication;
 import ru.job4j.chat.model.Message;
@@ -34,6 +35,7 @@ public class MessageControllerTest {
     private MockMvc mockMvc;
 
     @Test
+    @WithMockUser
     public void whenFindAllMessageInRoomNumber1ThenReturnJsonAllMessagesFromThisRoom() throws Exception {
         int idRoom = 1;
         Message mFirst = Message.of(1);
@@ -48,6 +50,7 @@ public class MessageControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenFindAllMessageInRoomNumberIncorrectThenStatusNoContentAndReturnJsonEmptyListFromThisRoom() throws Exception {
         int idRoom = 10;
         String rslJson = new ObjectMapper().writeValueAsString(List.of());
@@ -59,6 +62,7 @@ public class MessageControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenCreateMessageThenStatusIsCreatedAndReturnJsonMessage() throws Exception {
         int idRoom = 1;
         Message newMessage = new Message();
@@ -77,6 +81,7 @@ public class MessageControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenUpdateMessageThenStatusIsOk() throws Exception {
         int idRoom = 1;
         Person person = Person.of(1);
@@ -93,6 +98,7 @@ public class MessageControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenUpdateMessageThenStatusIsBadRequest() throws Exception {
         int idRoom = 1;
         Message message = Message.of(1);
@@ -109,6 +115,7 @@ public class MessageControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenDeleteMessageThenStatusIsOk() throws Exception {
         mockMvc.perform(delete("/room/{id_room}/message/{id}", 1, 1))
                 .andDo(print())

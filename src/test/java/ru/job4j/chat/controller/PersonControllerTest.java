@@ -7,9 +7,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.job4j.chat.RunApplication;
 import ru.job4j.chat.model.Person;
+import ru.job4j.chat.model.Role;
 import ru.job4j.chat.service.PersonService;
 
 import java.util.List;
@@ -32,6 +34,7 @@ public class PersonControllerTest {
     private MockMvc mockMvc;
 
     @Test
+    @WithMockUser
     public void whenFindAllPersonThenReturnJsonAllPerson() throws Exception {
         Person pFirst = Person.of(1);
         Person pSecond = Person.of(2);
@@ -45,6 +48,7 @@ public class PersonControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenFindPersonByIdThenStatusIsOkAndReturnOneJsonPerson() throws Exception {
         int id = 1;
         Person person = Person.of(id);
@@ -57,6 +61,7 @@ public class PersonControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenFindPersonByIdThenStatusIsNotFoundAndReturnEmptyPerson() throws Exception {
         int id = 1;
         String rslJson = new ObjectMapper().writeValueAsString(new Person());
@@ -68,6 +73,7 @@ public class PersonControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenCreatePersonThenStatusIsCreatedAndReturnJsonPerson() throws Exception {
         Person newPerson = new Person();
         newPerson.setName("root");
@@ -85,6 +91,7 @@ public class PersonControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenUpdatePersonThenStatusIsOk() throws Exception {
         Person person = Person.of(1);
         String reqJson = new ObjectMapper().writeValueAsString(person);
@@ -96,8 +103,23 @@ public class PersonControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenDeletePersonThenStatusIsOk() throws Exception {
         mockMvc.perform(delete("/person/{id}", 1))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+    }
+
+    @Test
+    public void whenSignUpThenStatusOk() throws Exception {
+        Person person = new Person();
+        person.setUsername("root");
+        person.setPassword("root");
+        person.setRole(new Role());
+        String reqJson = new ObjectMapper().writeValueAsString(person);
+        mockMvc.perform(post("/person/sign-up").contentType(MediaType.APPLICATION_JSON)
+                .content(reqJson))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));

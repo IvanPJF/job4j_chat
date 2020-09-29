@@ -19,9 +19,11 @@ create table role
 
 create table person
 (
-    id      serial,
-    name    varchar(200),
-    role_id integer not null,
+    id       serial,
+    name     varchar(200),
+    username varchar(200) not null unique,
+    password varchar(200) not null,
+    role_id  integer      not null,
     primary key (id),
     foreign key (role_id) references role (id)
 );

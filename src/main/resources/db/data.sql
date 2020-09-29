@@ -7,9 +7,10 @@ values ('R_ADMIN'),
        ('R_USER');
 
 
-insert into person (name, role_id)
-values ('John', (select id from role where name = 'R_ADMIN')),
-       ('Man', (select id from role where name = 'R_USER'));
+insert into person (name, username, password, role_id)
+values ('John', 'root', '$2a$10$KJqFGRiSrkGdHYE9MxTF7eJMTCNHbBoDIl1TzFhNfbDGjGy5jWLkq', (select id from role where name = 'R_ADMIN')),
+       ('Man', 'user', '$2a$10$KJqFGRiSrkGdHYE9MxTF7eJMTCNHbBoDIl1TzFhNfbDGjGy5jWLkq', (select id from role where name = 'R_USER'));
+-- password = root
 
 insert into message (body, room_id, person_id)
 values ('Hi, java', (select id from room where name = 'java'), (select id from person where name = 'John')),

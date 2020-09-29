@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.job4j.chat.RunApplication;
 import ru.job4j.chat.model.Room;
@@ -32,6 +33,7 @@ public class RoomControllerTest {
     private MockMvc mockMvc;
 
     @Test
+    @WithMockUser
     public void whenFindAllRoomsThenStatusOkAndReturnJsonAllRooms() throws Exception {
         Room rFirst = Room.of(1);
         Room rSecond = Room.of(2);
@@ -45,6 +47,7 @@ public class RoomControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenFindRoomByIdThenStatusOkAndReturnJsonOneRoom() throws Exception {
         int id = 1;
         Room room = Room.of(id);
@@ -57,6 +60,7 @@ public class RoomControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenFindRoomByIdThenStatusNotFoundAndReturnJsonEmptyRoom() throws Exception {
         int id = 1;
         String rslJson = new ObjectMapper().writeValueAsString(new Room());
@@ -68,6 +72,7 @@ public class RoomControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenCreateRoomThenStatusIsCreatedAndReturnJsonRoom() throws Exception {
         Room newRoom = new Room();
         newRoom.setName("world");
@@ -84,6 +89,7 @@ public class RoomControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenUpdateRoomThenStatusIsOk() throws Exception {
         Room room = Room.of(1);
         String reqJson = new ObjectMapper().writeValueAsString(room);
@@ -94,6 +100,7 @@ public class RoomControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenDeleteRoomThenStatusIsOk() throws Exception {
         mockMvc.perform(delete("/room/{id}", 1))
                 .andDo(print())
